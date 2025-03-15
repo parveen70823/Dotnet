@@ -1,0 +1,26 @@
+# Ignore build output folders
+bin/
+obj/
+
+# Ignore Visual Studio files
+.vs/
+.vscode/
+
+# Ignore user-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# Ignore environment secrets (IMPORTANT)
+appsettings.json
+appsettings.Development.json
+secrets.json
+
+# Ignore NuGet packages
+packages/

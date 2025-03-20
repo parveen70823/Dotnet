@@ -45,7 +45,8 @@ namespace DbOperationsWithEFCoreApp.Controllers
                                 {
                                     currId = currencies.Id,
                                     currTitle = currencies.Title
-                                }).ToListAsync();
+                                }).AsNoTracking().ToListAsync();
+            //use this AsNoTracking() method in scenario when we only read bulk data because this function disable the tracking of the state of the entity in efcore which save resources.
 
             return Ok(result);//generlly we will use diff class for result for that we will use auto
                               //mapper which map field from the table class.

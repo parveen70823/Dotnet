@@ -11,7 +11,7 @@
         public int LanguageId { get; set; }//this work as the fk of this table and below we make ref.
         public int? AuthorId { get; set; } //here ? makes it nullable
 
-        public Author? Author { get; set; }
-        public Language? Language { get; set; }//this property will be use to reference the Language table
+        //public virtual Author? Author { get; set; }
+        //public virtual Language? Language { get; set; }//this property will be use to reference the Language table
     }
 }

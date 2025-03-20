@@ -7,7 +7,7 @@
         public string Description { get; set; }
 
 
-        public ICollection<Book> Books { get; set; }//make one to many relation with the book table
+        public virtual ICollection<Book> Books { get; set; }//make one to many relation with the book table
 
     }
 }

@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("DB")).LogTo(Console.WriteLine));
-
+options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DB")).LogTo(Console.WriteLine));
+//here we include lazyloading() method of efcore
 // Add services to the container.
 
 builder.Services.AddControllers();

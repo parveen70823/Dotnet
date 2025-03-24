@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.IdentityModel.Tokens;
 using SamuraiApp.Data;
 using SamuraiApp.Domain;
@@ -13,13 +15,21 @@ class Program
     private static void Main(string[] args)
     {
         _context.Database.EnsureCreated(); //This will cause EF Core to read the provider and connection string defined in
-        //the context class, and then go look to see if the database exists
-        //GetSamurais("Before Add:");
-        //AddSamurai();
-        //GetSamurais("After Add:");
-        AddSamurais("Julie", "Sampson");
-        GetSamurais("");
-        Console.Write("Press any key...");
+                                           //the context class, and then go look to see if the database exists
+                                           //GetSamurais("Before Add:");
+                                           //AddSamurai();
+                                           //GetSamurais("After Add:");
+                                           //AddSamurais("Julie", "Sampson");
+                                           //GetSamurais("");
+                                           //Console.Write("Press any key...");
+                                           //InsertNewSamuraiWithAQuote();
+                                           //InsertNewSamuraiWithManyQuotes();
+                                           //AddQuoteToExistingSamuraiWhileTracked();
+                                           //AddQuoteToExistingSamuraiNotTracked(2);
+                                           //EagerLoadSamuraiWithQuotes();
+                                           //ProjectSomeProperties();
+
+        ProjectSamuraiWithQuotes();
         Console.ReadKey();
     }
     private void AddVariouType()
@@ -90,4 +100,90 @@ class Program
             Context2.SaveChanges();
         }
     }
+
+    private static void InsertNewSamuraiWithAQuote()
+    {
+        var samurai = new Samurai
+        {
+            Name = "kambei Shimada",
+            Quotes = new List<Quote>
+            {
+                new Quote{Text = "I have come to save you"}
+            }
+        };
+        _context.Samurais.Add(samurai);
+        _context.SaveChanges();
+
+    }
+    private static void InsertNewSamuraiWithManyQuotes()
+    {
+        var samurai = new Samurai
+        {
+            Name = " Kyuozo",
+            Quotes = new List<Quote>
+            {
+                new Quote{Text = "Watch out for my sharp sword!"},
+                new Quote{Text = " I told you to watch out for the sharp sword! oh well!"}
+            }
+        };
+        _context.Samurais.Add(samurai);    
+        _context.SaveChanges();
+    }
+    private static void AddQuoteToExistingSamuraiWhileTracked()
+    {
+        var samurai = _context.Samurais.FirstOrDefault();
+        samurai.Quotes.Add(new Quote {
+            Text = "I Bet you are happy that i have save yoy"
+        });
+        _context.SaveChanges();
+    }
+    private static void AddQuoteToExistingSamuraiNotTracked(int SamuraiId)
+    {
+        var samurai = _context.Samurais.Find(SamuraiId);
+        samurai.Quotes.Add(new Quote {
+            Text = "Now that i have saved you, will you feed me dinner!"
+        });
+        using(var newContext = new SamuraiContext())
+        {
+            newContext.Samurais.Update(samurai);
+            newContext.SaveChanges();
+        }
+    }
+
+    private static void EagerLoadSamuraiWithQuotes()
+    {
+        var samuraiWithQuotes = _context.Samurais.Include(s=>s.Quotes).ToList();
+        var splitQuery = _context.Samurais.AsSplitQuery().Include(static s=>s.Quotes).ToList();
+        var filterInclude = _context.Samurais
+            .Include(s => s.Quotes.Where(q => q.Text.Contains("Thanks!"))).ToList();
+        var filterPrimaryEntityWithInclude = _context.Samurais
+            .Where(s => s.Name.Contains("Sampson"))
+            .Include(s => s.Quotes).FirstOrDefault();
+    }
+    private static void ProjectSomeProperties()
+    {
+        //var someProperties = _context.Samurais.Select(s => new { s.id, s.Name }).ToList();
+        var idAndName = _context.Samurais.Select(s => new IdAndName(s.id, s.Name)).ToList();
+    }
+    public struct IdAndName
+    {
+        public IdAndName(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+    private static void ProjectSamuraiWithQuotes()
+    {
+        var somePropertiesWithQuotes = _context.Samurais
+            .Select(s => new
+            {
+                s.id,
+                s.Name,
+                QuotesCount = s.Quotes.Count
+            }).ToList();
+    }
+
 }

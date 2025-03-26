@@ -4,6 +4,20 @@
 }
 <h3>Restaurants</h3> 
 
+<form method="get">
+    <div class="form-group">
+        <div class="input-group">
+            <input type="search" class="form-control" asp-for="SearchTerm" />
+                  <!--  value="" name="searchTerm" /> in usual html we do this but MS provide tag helper asp-for will automatically do 2 way binding store (name) and shor like (value)-->
+                  
+            <span class="input-group-btn">
+                <button class="btn btn-default">
+                    <i class="bi bi-search"></i> <!-- Bootstrap 5 search icon -->
+                </button>
+            </span>
+        </div>
+    </div>
+</form>
 
 <table class="table">
     @foreach(var restaurant in Model.Restaurants)

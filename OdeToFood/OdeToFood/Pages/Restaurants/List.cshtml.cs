@@ -12,16 +12,23 @@ namespace OdeToFood.Pages.Restaurants
 
         public string Message { get; set; }  // Property to store the message
         public IEnumerable<Restaurant> Restaurants { get; set; }
+
+        [BindProperty(SupportsGet = true)]//asp.net method when this class instatiated this method always search for this parameter in Http request and populate itself automatically.
+        public string SearchTerm { get; set; }
         public ListModel(IConfiguration config, IRestaurantData restaurantData) // Constructor with Dependency Injection
         {
             this.config = config;
             this.restaurantData = restaurantData;
         }
 
-        public void OnGet()  // This method is called when the page is accessed
+        //public void OnGet(string searchTerm)  // This method is called when the page is accessed and in paras this is model binding.
+        public void OnGet()  
+        //Model Binding in ASP.NET Core automatically maps HTTP request data (like query strings, form inputs, and
+        //route values) to C# properties or parameters. This eliminates the need for manual request parsing.
         {
             Message = config["Message"]; // Reading "Message" from appsettings.json
-            Restaurants = restaurantData.GetAll();
+            //Restaurants = restaurantData.GetAll();
+            Restaurants = restaurantData.GetRestaurantByName(SearchTerm);
         }
     }
 }

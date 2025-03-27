@@ -26,6 +26,18 @@
             <td>@restaurant.Name</td>
             <td>@restaurant.Location</td>
             <td>@restaurant.cuisine</td>
+            <td>
+                <a class="btn btn-lg"
+                    asp-page="./Detail"
+                   asp-route-restaurantId="@restaurant.Id">
+                    <i class="bi bi-view-list"></i>
+                </a>
+                <a class="btn btn-lg"
+                   asp-page="./Edit"
+                   asp-route-restaurantId="@restaurant.Id">
+                    <i class="bi bi-pen"></i>
+                </a>
+            </td>
         </tr>
     }
 </table>

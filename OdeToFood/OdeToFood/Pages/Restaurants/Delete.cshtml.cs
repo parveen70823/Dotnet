@@ -5,30 +5,28 @@ using OdeToFood.Data;
 
 namespace OdeToFood.Pages.Restaurants
 {
-    public class DetailModel : PageModel
+    public class DeleteModel : PageModel
     {
         private readonly IRestaurantData restaurantData;
-
-        [TempData]
-        public string Message { get; set; }
         public Restaurant Restaurant { get; set; }
-        public DetailModel(IRestaurantData restaurantData)
+        public DeleteModel(IRestaurantData restaurantData)
         {
             this.restaurantData = restaurantData;
         }
-
-        //public void OnGet(int restaurantId)
-        public IActionResult OnGet(int restaurantId)
+        public void OnGet(int restaurantId)
         {
-            //Restaurant = new Restaurant();
-            //Restaurant.Id = restaurantId; 
             Restaurant = restaurantData.GetRestaurantById(restaurantId);
-            if (Restaurant == null)
+        }
+        public IActionResult OnPost(int restaurantId)
+        {
+            var restaurant = restaurantData.Delete(restaurantId);
+            restaurantData.Commit();
+            if (restaurant == null)
             {
                 return RedirectToPage("./NoFound");
             }
-            return Page();
-
+            TempData["Message"] = $"{restaurant.Name} deleted!";
+            return RedirectToPage("./List");
         }
     }
 }

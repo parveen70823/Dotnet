@@ -26,7 +26,7 @@ namespace OdeToFood.Pages.Restaurants
         //Model Binding in ASP.NET Core automatically maps HTTP request data (like query strings, form inputs, and
         //route values) to C# properties or parameters. This eliminates the need for manual request parsing.
         {
-            Message = config["Message"]; // Reading "Message" from appsettings.json
+            //Message = config["Message"]; // Reading "Message" from appsettings.json
             //Restaurants = restaurantData.GetAll();
             Restaurants = restaurantData.GetRestaurantByName(SearchTerm);
         }

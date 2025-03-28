@@ -19,11 +19,18 @@ namespace OdeToFood.Pages.Restaurants
             this.restaurantData = restaurantData;
             this.htmlHelper = htmlHelper;
         }
-        public IActionResult OnGet(int restaurantId)
+        public IActionResult OnGet(int? restaurantId)
         {
             Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
-            Restaurant = restaurantData.GetRestaurantById(restaurantId);
-            if(Restaurant == null)
+            if (restaurantId.HasValue)
+            {
+                Restaurant = restaurantData.GetRestaurantById(restaurantId.Value);
+            }
+            else
+            {
+                Restaurant = new Restaurant();
+            }
+            if (Restaurant == null)
             {
                 RedirectToPage("./NoFound");
             }
@@ -31,9 +38,22 @@ namespace OdeToFood.Pages.Restaurants
         }
         public IActionResult OnPost()
         {
-            Restaurant = restaurantData.Update(Restaurant);
+            if (!ModelState.IsValid)
+            {
+                Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+                return Page();
+            }
+            if(Restaurant.Id > 0)
+            {
+                restaurantData.Update(Restaurant);
+            }
+            else
+            {
+                restaurantData.Add(Restaurant);
+            }
+            TempData["Message"] = "Restaurant saved!";//TempData is a dictionary that is stored in the session and is available for the next request and can access like a dictonary
             restaurantData.Commit();
-            return Page();
+            return RedirectToPage("./Detail", new { restaurantId = Restaurant.Id });//this pattern of redirecting after updatin in post request called post-redirect-get Pattern PRG pattern
         }
     }
 }

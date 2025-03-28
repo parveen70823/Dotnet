@@ -1,46 +1,38 @@
 ﻿@page
 @model OdeToFood.Pages.Restaurants.ListModel
 @{
+    ViewData["Title"] = "Restaurants";
 }
 <h3>Restaurants</h3> 
 
 <form method="get">
     <div class="form-group">
+        @* <div class="input-group"> *@
+        @*     <input type="search" class="form-control" asp-for="SearchTerm" /> *@
+        @*     <!--  value="" name="searchTerm" /> in usual html we do this but MS provide tag helper asp-for will automatically do 2 way binding store (name) and shor like (value)--> *@
+
+        @*     <span class="input-group-btn"> *@
+        @*         <button class="btn btn-default"> *@
+        @*             <i class="bi bi-search"></i> <!-- Bootstrap 5 search icon --> *@
+        @*         </button> *@
+        @*     </span> *@
+        @* </div> *@
         <div class="input-group">
             <input type="search" class="form-control" asp-for="SearchTerm" />
-                  <!--  value="" name="searchTerm" /> in usual html we do this but MS provide tag helper asp-for will automatically do 2 way binding store (name) and shor like (value)-->
-                  
-            <span class="input-group-btn">
-                <button class="btn btn-default">
-                    <i class="bi bi-search"></i> <!-- Bootstrap 5 search icon -->
-                </button>
-            </span>
+            <button class="btn btn-outline-secondary">
+                <i class="bi bi-search"></i>
+            </button>
         </div>
+
     </div>
 </form>
 
-<table class="table">
-    @foreach(var restaurant in Model.Restaurants)
-    {
-        <tr>
-            <td>@restaurant.Name</td>
-            <td>@restaurant.Location</td>
-            <td>@restaurant.cuisine</td>
-            <td>
-                <a class="btn btn-lg"
-                    asp-page="./Detail"
-                   asp-route-restaurantId="@restaurant.Id">
-                    <i class="bi bi-view-list"></i>
-                </a>
-                <a class="btn btn-lg"
-                   asp-page="./Edit"
-                   asp-route-restaurantId="@restaurant.Id">
-                    <i class="bi bi-pen"></i>
-                </a>
-            </td>
-        </tr>
-    }
-</table>
+@foreach(var restaurant in Model.Restaurants)
+{
+    <partial name="_Summary" model="restaurant" />
+}
+
+<a asp-page="./Edit" class="btn btn-primary">Add New</a>
 
 
 <div>
